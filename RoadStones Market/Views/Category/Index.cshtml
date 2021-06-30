@@ -1,0 +1,46 @@
+﻿@model IEnumerable<RoadStones_Market.Models.Category>
+
+<div class="container p-3">
+    <div class="row pt-4">
+        <div class="col-6">
+            <h2 class="text-primary">Category List</h2>
+        </div>
+        <div class="col-6">
+            Create New Category
+        </div>
+    </div>
+    
+    <br/><br/>
+    
+    @if (Model.Any())
+    { 
+        <table class="table table-bordered table-striped" style="width: 100%">
+            <thead>
+            <tr>
+                <th>
+                    Category Name
+                </th>
+                <th>
+                    Display Order
+                </th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+                @foreach (var category in Model)
+                {
+                    <tr>
+                        <td width="50%">@category.Name</td>
+                        <td width="30%">@category.DisplayOrder</td>
+                        <td></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p> No Category exists.</p>
+    }
+
+</div>
