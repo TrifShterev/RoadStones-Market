@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace RoadStones_Market.Models
 {
@@ -9,6 +10,7 @@ namespace RoadStones_Market.Models
 
         public string Name { get; set; }
 
+        [DisplayName("Display Order")]
         public int DisplayOrder { get; set; }
     }
 }

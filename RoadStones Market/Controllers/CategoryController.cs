@@ -23,5 +23,22 @@ namespace RoadStones_Market.Controllers
 
             return View(objList);
         }
+
+        //Get
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        //Post
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Create(Category model)
+        {
+            _db.Categories.Add(model);
+            _db.SaveChanges();
+
+            return RedirectToAction("Index");
+        }
     }
 }
