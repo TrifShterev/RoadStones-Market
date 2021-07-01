@@ -27,14 +27,14 @@ namespace RoadStones_Market.Controllers
 
         public IActionResult Index()
         {
-            IEnumerable<Product> objList = _db.Products;
+            IEnumerable<Product> dbListOfProducts = _db.Products.Include(p=> p.Category);
 
-            foreach (var product in objList)
-            {
-                product.Category = _db.Categories.FirstOrDefault(c => c.Id == product.CategoryId);
-            }
+            //foreach (var product in dbListOfProducts)
+            //{
+            //    product.Category = _db.Categories.FirstOrDefault(c => c.Id == product.CategoryId);
+            //}
 
-            return View(objList);
+            return View(dbListOfProducts);
         }
 
         //Get

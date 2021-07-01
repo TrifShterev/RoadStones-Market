@@ -11,6 +11,8 @@ namespace RoadStones_Market.Models
         [Required]
         public string Name { get; set; }
 
+        public string ShortDescription { get; set; }
+
         public string Description { get; set; }
 
         [Range(0,double.MaxValue)]
