@@ -2,6 +2,6 @@
 {
     public static class WebConstants
     {
-        public static string ImagePath = @"\images\products";
+        public static string ImagePath = @"\images\products\";
     }
 }

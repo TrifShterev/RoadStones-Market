@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using RoadStones_Market.Data;
 using RoadStones_Market.Models;
 using RoadStones_Market.Models.ViewModels;
@@ -71,7 +72,7 @@ namespace RoadStones_Market.Controllers
             }
             else
             {
-                productVM.Product = _db.Products.Find(id);
+                productVM.Product = _db.Products.Find(id.GetValueOrDefault());
 
                 if (productVM.Product== null)
                 {
@@ -91,6 +92,12 @@ namespace RoadStones_Market.Controllers
             //Server Validation- Check
             if (!ModelState.IsValid)
             {
+                productVm.CategorySelectList = _db.Categories
+                    .Select(x => new SelectListItem
+                    {
+                        Text = x.Name,
+                        Value = x.Id.ToString()
+                    });
                 return View(productVm);
             }
 
@@ -120,6 +127,43 @@ namespace RoadStones_Market.Controllers
             else
             {
                 //Updating
+                var productFromDb = _db.Products.AsNoTracking().FirstOrDefault(p => p.Id == productVm.Product.Id);
+
+                if (productFromDb == null)
+                {
+                    return NotFound();
+                }
+
+                if (files.Count>0)
+                {
+                    string uploadPath = webRoothPath + WebConstants.ImagePath;
+
+                    string fileName = Guid.NewGuid().ToString();
+
+                    string extentionOfTheFile = Path.GetExtension(files[0].FileName);
+
+                    var oldFile = Path.Combine(uploadPath, productFromDb.Image);
+
+                    if (System.IO.File.Exists(oldFile))
+                    {
+                       System.IO.File.Delete(oldFile);
+                    }
+                    
+
+                    using (var fileStream = new FileStream(Path.Combine(uploadPath, fileName + extentionOfTheFile), FileMode.Create))
+                    {
+                        files[0].CopyTo(fileStream);
+                    }
+
+                    productVm.Product.Image = fileName + extentionOfTheFile;
+
+                }
+                else
+                {
+                    productVm.Product.Image =productFromDb.Image;
+                }
+
+                _db.Products.Update(productVm.Product);
             }
 
             _db.SaveChanges();
@@ -135,17 +179,17 @@ namespace RoadStones_Market.Controllers
             {
                 return NotFound();
             }
-            var model = _db.Products.Find(id);
-
-            if (model == null)
+            var product = _db.Products.Include(x=>x.Category).FirstOrDefault(x=>x.Id==id);
+            
+            if (product == null)
             {
                 return NotFound();
             }
-            return View(model);
+            return View(product);
         }
 
         //Post
-        [HttpPost]
+        [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public IActionResult DeletePost(int? id)
         {
@@ -155,6 +199,15 @@ namespace RoadStones_Market.Controllers
             if (model== null)
             {
                 return NotFound();
+            }
+
+            string uploadPath = _webHostEnvironment.WebRootPath + WebConstants.ImagePath;
+            
+            var oldFile = Path.Combine(uploadPath, model.Image);
+
+            if (System.IO.File.Exists(oldFile))
+            {
+                System.IO.File.Delete(oldFile);
             }
 
             _db.Products.Remove(model);
