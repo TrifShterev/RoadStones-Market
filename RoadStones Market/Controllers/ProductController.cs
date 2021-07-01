@@ -2,8 +2,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using RoadStones_Market.Data;
 using RoadStones_Market.Models;
@@ -14,10 +16,12 @@ namespace RoadStones_Market.Controllers
     public class ProductController : Controller
     {
         private readonly ApplicationDbContext _db;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public ProductController(ApplicationDbContext db)
+        public ProductController(ApplicationDbContext db, IWebHostEnvironment webHostEnvironment)
         {
             _db = db;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         public IActionResult Index()
@@ -82,17 +86,43 @@ namespace RoadStones_Market.Controllers
         //Post
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult CreateUpdate(Product model)
+        public IActionResult CreateUpdate(ProductVM productVm)
         {
             //Server Validation- Check
             if (!ModelState.IsValid)
             {
-                return View(model);
+                return View(productVm);
             }
 
-            _db.Products.Add(model);
-            _db.SaveChanges();
+            var files = HttpContext.Request.Form.Files;
 
+            string webRoothPath = _webHostEnvironment.WebRootPath;
+
+            if (productVm.Product.Id == 0)
+            {
+                //Creating (Adds new file-product and picture to the Db and saves it at \wwwroot\images\products)
+                string uploadPath = webRoothPath + WebConstants.ImagePath;
+
+                string fileName = Guid.NewGuid().ToString();
+
+                string extentionOfTheFile = Path.GetExtension(files[0].FileName);
+
+                using (var fileStream = new FileStream(Path.Combine(uploadPath,fileName+extentionOfTheFile),FileMode.Create))
+                {
+                    files[0].CopyTo(fileStream);
+                }
+
+                productVm.Product.Image = fileName + extentionOfTheFile;
+
+                _db.Products.Add(productVm.Product);
+                
+            }
+            else
+            {
+                //Updating
+            }
+
+            _db.SaveChanges();
             return RedirectToAction("Index");
         }
 

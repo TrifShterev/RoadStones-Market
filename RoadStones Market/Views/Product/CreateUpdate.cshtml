@@ -44,7 +44,8 @@
                             <label asp-for="Product.Description"></label>
                         </div>
                         <div class="col-8">
-                            <input asp-for="Product.Description" class="form-control" />
+                            @*Summernote used as an editor*@
+                            <textarea asp-for="Product.Description" class="form-control summernote" ></textarea>
                             <span asp-validation-for="Product.Description" class="text-danger"></span>
                         </div>
                     </div>    
@@ -111,6 +112,15 @@
         <partial name="_ValidationScriptsPartial" />
     }
     <script>
+       /* This makes Summernote editor to work*/
+        $(document).ready(function() {
+            $('.summernote').summernote({
+                height:250
+            });
+        });
+
+
+        @* Sweetalert2 JS framework used for pop - up messages *@
         function validateInput()
         {
             if (document.getElementById("uploadBox").value == "")
