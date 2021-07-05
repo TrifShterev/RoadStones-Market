@@ -20,15 +20,21 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
-                        @*<li class="nav-item">
+                        <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                            </li>*@
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Category" asp-action="Index">Category</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Product" asp-action="Index">Product</a>
-                        </li>
+                            </li>
+                       
+                        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-expanded="False">
+            Content Management
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a class="nav-link text-dark" asp-area="" asp-controller="Category" asp-action="Index">Categories</a>
+              <a class="nav-link text-dark" asp-area="" asp-controller="Product" asp-action="Index">Products</a>
+            <div class="dropdown-divider"></div>
+          
+          </div>
+        </li>
                     </ul>
                 </div>
             </div>
