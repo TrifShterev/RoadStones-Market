@@ -6,9 +6,11 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using RoadStones_Market.Data;
 using RoadStones_Market.Models.ViewModels;
+using RoadStones_Market.Utility;
 
 namespace RoadStones_Market.Controllers
 {
@@ -36,6 +38,15 @@ namespace RoadStones_Market.Controllers
 
         public IActionResult Details(int id)
         {
+            List<ShoppingCart> shoppingCartList = new List<ShoppingCart>();
+
+            if (HttpContext.Session.Get<IEnumerable<ShoppingCart>>(WebConstants.SessionCart) != null
+                && HttpContext.Session.Get<IEnumerable<ShoppingCart>>(WebConstants.SessionCart).Any())
+            {
+                shoppingCartList = HttpContext.Session.Get<List<ShoppingCart>>(WebConstants.SessionCart);
+            }
+
+
             var detailsVm = new DetailsVM()
             {
                 Product = _db.Products
@@ -45,8 +56,63 @@ namespace RoadStones_Market.Controllers
 
             };
 
+            foreach (var item in shoppingCartList)
+            {
+                if (item.ProductId==id)
+                {
+                    detailsVm.ExistInCart = true;
+                }   
+            }
+
             return View(detailsVm);
         }
+
+
+        [HttpPost,ActionName("Details")]
+
+        public IActionResult DetailsPost(int id)
+        {
+            List<ShoppingCart> shoppingCartList = new List<ShoppingCart>();
+
+            if (HttpContext.Session.Get<IEnumerable<ShoppingCart>>(WebConstants.SessionCart) != null 
+                && HttpContext.Session.Get<IEnumerable<ShoppingCart>>(WebConstants.SessionCart).Any())
+            {
+                shoppingCartList = HttpContext.Session.Get<List<ShoppingCart>>(WebConstants.SessionCart);
+            }
+            shoppingCartList.Add(new ShoppingCart
+            {
+                ProductId = id
+            });
+            HttpContext.Session.Set(WebConstants.SessionCart, shoppingCartList);
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        
+
+        public IActionResult RemoveFromCart(int id)
+        {
+            List<ShoppingCart> shoppingCartList = new List<ShoppingCart>();
+
+            if (HttpContext.Session.Get<IEnumerable<ShoppingCart>>(WebConstants.SessionCart) != null
+                && HttpContext.Session.Get<IEnumerable<ShoppingCart>>(WebConstants.SessionCart).Any())
+            {
+                shoppingCartList = HttpContext.Session.Get<List<ShoppingCart>>(WebConstants.SessionCart);
+            }
+
+            var itemToRemove = shoppingCartList.SingleOrDefault(r => r.ProductId == id);
+
+            if (itemToRemove!=null)
+            {
+                shoppingCartList.Remove(itemToRemove);
+            }
+
+           
+            HttpContext.Session.Set(WebConstants.SessionCart, shoppingCartList);
+
+            return RedirectToAction(nameof(Index));
+        }
+
 
         public IActionResult Privacy()
         {
