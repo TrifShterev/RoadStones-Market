@@ -17,5 +17,7 @@ namespace RoadStones_Market.Data
 
         public DbSet<Product> Products { get; set; }
 
+        public DbSet<ApplicationUser> ApplicationUsers { get; set; }
+
     }
 }
