@@ -35,7 +35,16 @@ namespace RoadStones_Market
                 .AddDefaultTokenProviders()
                 .AddDefaultUI()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
+            services.AddAuthorization(options =>
+            {
 
+                options.AddPolicy("Admin",
+                    authBuilder =>
+                    {
+                        authBuilder.RequireRole("Admin");
+                    });
+
+            });
             services.AddTransient<IEmailSender, EmailSender>();
 
             services.AddHttpContextAccessor();

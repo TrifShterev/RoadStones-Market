@@ -3,11 +3,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using RoadStones_Market.Data;
 using RoadStones_Market.Models;
 
 namespace RoadStones_Market.Controllers
 {
+    [Authorize(WebConstants.AdminRole)]
     public class CategoryController : Controller
     {
         private readonly ApplicationDbContext _db;

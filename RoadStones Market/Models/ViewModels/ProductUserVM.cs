@@ -11,6 +11,6 @@ namespace RoadStones_Market.Models.ViewModels
 
         public ApplicationUser ApplicationUser { get; set; }
 
-        public IEnumerable<Product>  ProductsList { get; set; }
+        public List<Product>  ProductsList { get; set; }
     }
 }

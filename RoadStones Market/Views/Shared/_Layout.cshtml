@@ -30,19 +30,22 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
-
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-expanded="False">
-                                Content Management
-                            </a>
-                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Category" asp-action="Index">Categories</a>
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Product" asp-action="Index">Products</a>
-                                <div class="dropdown-divider"></div>
-                                @*This pointing to the Razor Page in Area folder*@
-                                <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register">Create Admin User</a>
-                            </div>
-                        </li>
+                        @if (User.IsInRole(WebConstants.AdminRole))
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-expanded="False">
+                                    Content Management
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Category" asp-action="Index">Categories</a>
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Product" asp-action="Index">Products</a>
+                                    <div class="dropdown-divider"></div>
+                                    @*This pointing to the Razor Page in Area folder*@
+                                    <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register">Create Admin User</a>
+                                </div>
+                            </li>
+                        }
+                       
                         <li>
                             @if (HttpContextAccessor.HttpContext.Session.Get<List<ShoppingCart>>(WebConstants.SessionCart) != null)
                             {

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -14,6 +15,7 @@ using RoadStones_Market.Models.ViewModels;
 
 namespace RoadStones_Market.Controllers
 {
+    [Authorize(WebConstants.AdminRole)]
     public class ProductController : Controller
     {
         private readonly ApplicationDbContext _db;

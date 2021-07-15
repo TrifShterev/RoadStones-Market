@@ -14,6 +14,14 @@ namespace RoadStones_Market.Utility
 {
     public class EmailSender : IEmailSender
     {
+        private readonly IConfiguration _configuration;
+
+        public EmailSender(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
+
+        public MailJetSettings MailJetSettings { get; set; }
 
 
         public Task SendEmailAsync(string email, string subject, string htmlMessage)
@@ -23,8 +31,12 @@ namespace RoadStones_Market.Utility
 
         public async Task Execute(string email, string subject, string body)
         {
-            MailjetClient client = new MailjetClient("bf041dabae3655ca0f85a57ceaec4d8b", "2b8652542f071430549132c763c4555d")
-            {
+            MailJetSettings = _configuration.GetSection("MailJet").Get<MailJetSettings>();
+
+            MailjetClient client = new MailjetClient(MailJetSettings.ApiKey, MailJetSettings.SecretKey)
+            { 
+                //TODO I need to make sending of email work
+
                // Version = ApiVersion.V3_1,
                
             };
@@ -37,8 +49,8 @@ namespace RoadStones_Market.Utility
                         {
                             "From",
                             new JObject {
-                                {"Email", "3brakennus@gmail.com"},
-                                {"Name", "3b"}
+                                {"Email", "middnight_man@protonmail.com"},
+                                {"Name", "Proton"}
                             }
                         }, {
                             "To",
