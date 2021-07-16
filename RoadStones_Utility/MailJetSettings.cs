@@ -1,4 +1,4 @@
-﻿namespace RoadStones_Market.Utility
+﻿namespace RoadStones_Utility
 {
     public class MailJetSettings
     {

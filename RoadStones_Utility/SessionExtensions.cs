@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using System.Text.Json;
 
-namespace RoadStones_Market.Utility
+namespace RoadStones_Utility
 {
     public static class SessionExtensions
     {

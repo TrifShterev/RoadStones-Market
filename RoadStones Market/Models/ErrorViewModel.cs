@@ -1,5 +1,3 @@
-using System;
-
 namespace RoadStones_Market.Models
 {
     public class ErrorViewModel

@@ -23,4 +23,8 @@
     <Folder Include="wwwroot\images\products\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\RoadStones_Utility\RoadStones_Utility.csproj" />
+  </ItemGroup>
+
 </Project>

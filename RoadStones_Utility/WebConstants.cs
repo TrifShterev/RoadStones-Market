@@ -1,4 +1,4 @@
-﻿namespace RoadStones_Market
+﻿namespace RoadStones_Utility
 {
     public static class WebConstants
     {
