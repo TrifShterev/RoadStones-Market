@@ -4,13 +4,14 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using RoadStones_Market.Data;
+using RoadStones_Data.Data;
 
-namespace RoadStones_Market.Migrations
+
+namespace RoadStones_Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210701151640_AddedShortDescriptionPropToModelProduct")]
-    partial class AddedShortDescriptionPropToModelProduct
+    [Migration("20210701064827_AddedModelProductToDb")]
+    partial class AddedModelProductToDb
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -20,7 +21,7 @@ namespace RoadStones_Market.Migrations
                 .HasAnnotation("ProductVersion", "5.0.7")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("RoadStones_Market.Models.Category", b =>
+            modelBuilder.Entity("RoadStones_Models.Category", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -39,7 +40,7 @@ namespace RoadStones_Market.Migrations
                     b.ToTable("Categories");
                 });
 
-            modelBuilder.Entity("RoadStones_Market.Models.Product", b =>
+            modelBuilder.Entity("RoadStones_Models.Product", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -62,9 +63,6 @@ namespace RoadStones_Market.Migrations
                     b.Property<double>("Price")
                         .HasColumnType("float");
 
-                    b.Property<string>("ShortDescription")
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("Id");
 
                     b.HasIndex("CategoryId");
@@ -72,9 +70,9 @@ namespace RoadStones_Market.Migrations
                     b.ToTable("Products");
                 });
 
-            modelBuilder.Entity("RoadStones_Market.Models.Product", b =>
+            modelBuilder.Entity("RoadStones_Models.Product", b =>
                 {
-                    b.HasOne("RoadStones_Market.Models.Category", "Category")
+                    b.HasOne("RoadStones_Models.Category", "Category")
                         .WithMany()
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)

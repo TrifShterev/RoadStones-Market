@@ -7,7 +7,8 @@ using System;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
-using RoadStones_Market.Data;
+using RoadStones_Data.Data;
+
 using RoadStones_Utility;
 
 namespace RoadStones_Market

@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using RoadStones_Market.Models;
+using RoadStones_Models;
 
-namespace RoadStones_Market.Data
+namespace RoadStones_Data.Data
 {
     public class ApplicationDbContext: IdentityDbContext
     {

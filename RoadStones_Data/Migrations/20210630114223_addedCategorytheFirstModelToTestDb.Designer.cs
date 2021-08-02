@@ -4,9 +4,10 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using RoadStones_Market.Data;
+using RoadStones_Data.Data;
 
-namespace RoadStones_Market.Migrations
+
+namespace RoadStones_Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
     [Migration("20210630114223_addedCategorytheFirstModelToTestDb")]
@@ -20,7 +21,7 @@ namespace RoadStones_Market.Migrations
                 .HasAnnotation("ProductVersion", "5.0.7")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("RoadStones_Market.Models.Category", b =>
+            modelBuilder.Entity("RoadStones_Models.Category", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()

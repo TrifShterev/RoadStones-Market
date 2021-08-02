@@ -5,20 +5,20 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using RoadStones_Market.Data;
+using RoadStones_Data.Data;
 
-namespace RoadStones_Market.Migrations
+namespace RoadStones_Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210710071436_AddFullNameToUsers1")]
-    partial class AddFullNameToUsers1
+    [Migration("20210802130329_test")]
+    partial class test
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("ProductVersion", "5.0.6")
+                .HasAnnotation("ProductVersion", "5.0.8")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -170,12 +170,10 @@ namespace RoadStones_Market.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
                     b.Property<string>("LoginProvider")
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ProviderKey")
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ProviderDisplayName")
                         .HasColumnType("nvarchar(max)");
@@ -212,12 +210,10 @@ namespace RoadStones_Market.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("LoginProvider")
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Name")
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Value")
                         .HasColumnType("nvarchar(max)");
@@ -227,7 +223,7 @@ namespace RoadStones_Market.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("RoadStones_Market.Models.Category", b =>
+            modelBuilder.Entity("RoadStones_Models.Category", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -246,7 +242,7 @@ namespace RoadStones_Market.Migrations
                     b.ToTable("Categories");
                 });
 
-            modelBuilder.Entity("RoadStones_Market.Models.Product", b =>
+            modelBuilder.Entity("RoadStones_Models.Product", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -279,7 +275,7 @@ namespace RoadStones_Market.Migrations
                     b.ToTable("Products");
                 });
 
-            modelBuilder.Entity("RoadStones_Market.Models.ApplicationUser", b =>
+            modelBuilder.Entity("RoadStones_Models.ApplicationUser", b =>
                 {
                     b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
 
@@ -340,9 +336,9 @@ namespace RoadStones_Market.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("RoadStones_Market.Models.Product", b =>
+            modelBuilder.Entity("RoadStones_Models.Product", b =>
                 {
-                    b.HasOne("RoadStones_Market.Models.Category", "Category")
+                    b.HasOne("RoadStones_Models.Category", "Category")
                         .WithMany()
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)

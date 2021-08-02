@@ -5,9 +5,10 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using RoadStones_Market.Data;
+using RoadStones_Data.Data;
 
-namespace RoadStones_Market.Migrations
+
+namespace RoadStones_Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
     [Migration("20210710071204_AddFullNameToUsers")]
@@ -221,7 +222,7 @@ namespace RoadStones_Market.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("RoadStones_Market.Models.Category", b =>
+            modelBuilder.Entity("RoadStones_Models.Category", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -240,7 +241,7 @@ namespace RoadStones_Market.Migrations
                     b.ToTable("Categories");
                 });
 
-            modelBuilder.Entity("RoadStones_Market.Models.Product", b =>
+            modelBuilder.Entity("RoadStones_Models.Product", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -324,9 +325,9 @@ namespace RoadStones_Market.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("RoadStones_Market.Models.Product", b =>
+            modelBuilder.Entity("RoadStones_Models.Product", b =>
                 {
-                    b.HasOne("RoadStones_Market.Models.Category", "Category")
+                    b.HasOne("RoadStones_Models.Category", "Category")
                         .WithMany()
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)

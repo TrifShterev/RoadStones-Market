@@ -1,4 +1,4 @@
-﻿namespace RoadStones_Market.Models
+﻿namespace RoadStones_Models
 {
     public class ShoppingCart
     {

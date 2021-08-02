@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace RoadStones_Market.Models.ViewModels
+namespace RoadStones_Models.ViewModels
 {
     public class HomeVM
     {

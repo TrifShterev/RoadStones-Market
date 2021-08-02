@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace RoadStones_Market.Migrations
+namespace RoadStones_Data.Migrations
 {
     public partial class scaffoldIdentityRazorClassLib : Migration
     {

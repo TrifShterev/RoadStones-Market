@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
-using RoadStones_Market.Models;
+using RoadStones_Models;
 using RoadStones_Utility;
 
 namespace RoadStones_Market.Areas.Identity.Pages.Account

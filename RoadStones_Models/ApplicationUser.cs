@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace RoadStones_Market.Models
+namespace RoadStones_Models
 {
     public class ApplicationUser : IdentityUser
     {

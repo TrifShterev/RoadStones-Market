@@ -1,12 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using RoadStones_Market.Models;
+using RoadStones_Models;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
-using RoadStones_Market.Data;
-using RoadStones_Market.Models.ViewModels;
+using RoadStones_Data.Data;
+
+using RoadStones_Models.ViewModels;
 using RoadStones_Utility;
 
 namespace RoadStones_Market.Controllers

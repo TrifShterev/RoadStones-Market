@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace RoadStones_Market.Models
+namespace RoadStones_Models
 {
     public class Product
     {

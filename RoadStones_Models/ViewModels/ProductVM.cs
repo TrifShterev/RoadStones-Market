@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
-namespace RoadStones_Market.Models.ViewModels
+namespace RoadStones_Models.ViewModels
 {
     public class ProductVM
     {

@@ -8,9 +8,10 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity.UI.Services;
-using RoadStones_Market.Data;
-using RoadStones_Market.Models;
-using RoadStones_Market.Models.ViewModels;
+using RoadStones_Data.Data;
+
+using RoadStones_Models;
+using RoadStones_Models.ViewModels;
 using RoadStones_Utility;
 
 namespace RoadStones_Market.Controllers

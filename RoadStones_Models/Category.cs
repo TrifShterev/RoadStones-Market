@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
-namespace RoadStones_Market.Models
+namespace RoadStones_Models
 {
     public class Category
     {
