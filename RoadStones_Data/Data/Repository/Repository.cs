@@ -10,28 +10,28 @@ namespace RoadStones_Data.Data.Repository
     public class Repository<T> : IRepository<T> where T : class
     {
         private readonly ApplicationDbContext _db;
-        internal DbSet<T> dbSet;
+        internal DbSet<T> DbSet;
 
-        public Repository(DbSet<T> dbSet, ApplicationDbContext db)
+        public Repository( ApplicationDbContext db)
         {
             this._db = db;
-            this.dbSet = dbSet;
+            this.DbSet = _db.Set<T>();
         }
 
         public void Add(T entity)
         {
-            dbSet.Add(entity);
+            DbSet.Add(entity);
         }
 
         public T Find(int id)
         {
-            return dbSet.Find(id);
+            return DbSet.Find(id);
         }
 
         public T FirstOrDefault(System.Linq.Expressions.Expression<System.Func<T, bool>> filter = null, string includeProperties = null, bool isTracking = true)
         {
 
-            IQueryable<T> query = dbSet;
+            IQueryable<T> query = DbSet;
 
             if (filter != null)
             {
@@ -58,7 +58,7 @@ namespace RoadStones_Data.Data.Repository
 
         public IEnumerable<T> GetAll(Expression<System.Func<T, bool>> filter = null, Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null, string includeProperties = null, bool isTracking = true)
         {
-            IQueryable<T> query = dbSet;
+            IQueryable<T> query = DbSet;
 
             if (filter!=null)
             {
@@ -88,7 +88,7 @@ namespace RoadStones_Data.Data.Repository
 
         public void Remove(T entity)
         {
-            dbSet.Remove(entity);
+            DbSet.Remove(entity);
         }
 
         public void Save()

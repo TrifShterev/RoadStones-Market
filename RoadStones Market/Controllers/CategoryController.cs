@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Authorization;
-using RoadStones_Data.Data;
 
+using RoadStones_Data.Data.Repository.IRepository;
 using RoadStones_Models;
 using RoadStones_Utility;
 
@@ -11,16 +11,16 @@ namespace RoadStones_Market.Controllers
     [Authorize(WebConstants.AdminRole)]
     public class CategoryController : Controller
     {
-        private readonly ApplicationDbContext _db;
+        private readonly ICategoryRepository _categoryService;
 
-        public CategoryController(ApplicationDbContext db)
+        public CategoryController(ICategoryRepository categoryService)
         {
-            _db = db;
+            this._categoryService = categoryService;
         }
 
         public IActionResult Index()
         {
-            IEnumerable<Category> objList = _db.Categories;
+            IEnumerable<Category> objList = _categoryService.GetAll();
 
             return View(objList);
         }
@@ -42,20 +42,20 @@ namespace RoadStones_Market.Controllers
                 return View(model);
             }
 
-            _db.Categories.Add(model);
-            _db.SaveChanges();
+            _categoryService.Add(model);
+            _categoryService.Save();
 
             return RedirectToAction("Index");
         }
 
         //GET
-        public IActionResult Edit(int id)
+        public IActionResult Edit(int? id)
         {
             if (id==0 || id == null)
             {
                 return NotFound();
             }
-            var model = _db.Categories.Find(id);
+            var model = _categoryService.Find(id.GetValueOrDefault());
 
             if (model== null)
             {
@@ -75,8 +75,8 @@ namespace RoadStones_Market.Controllers
                 return View(model);
             }
 
-            _db.Categories.Update(model);
-            _db.SaveChanges();
+            _categoryService.Update(model);
+            _categoryService.Save();
 
             return RedirectToAction("Index");
         }
@@ -87,7 +87,7 @@ namespace RoadStones_Market.Controllers
             {
                 return NotFound();
             }
-            var model = _db.Categories.Find(id);
+            var model = _categoryService.Find(id.GetValueOrDefault());
 
             if (model == null)
             {
@@ -101,7 +101,7 @@ namespace RoadStones_Market.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult DeletePost(int? id)
         {
-            var model = _db.Categories.Find(id);
+            var model = _categoryService.Find(id.GetValueOrDefault());
 
             //Server Validation- Check
             if (model== null)
@@ -109,8 +109,8 @@ namespace RoadStones_Market.Controllers
                 return NotFound();
             }
 
-            _db.Categories.Remove(model);
-            _db.SaveChanges();
+            _categoryService.Remove(model);
+            _categoryService.Save();
 
             return RedirectToAction("Index");
         }

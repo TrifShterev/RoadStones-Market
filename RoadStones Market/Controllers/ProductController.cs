@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using RoadStones_Data.Data;
-
+using RoadStones_Data.Data.Repository.IRepository;
 using RoadStones_Models;
 using RoadStones_Models.ViewModels;
 using RoadStones_Utility;
@@ -18,18 +18,19 @@ namespace RoadStones_Market.Controllers
     [Authorize(WebConstants.AdminRole)]
     public class ProductController : Controller
     {
-        private readonly ApplicationDbContext _db;
+        private readonly IProductRepository _productRepository;
         private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public ProductController(ApplicationDbContext db, IWebHostEnvironment webHostEnvironment)
+        public ProductController( IWebHostEnvironment webHostEnvironment, IProductRepository productRepository)
         {
-            _db = db;
+            
             _webHostEnvironment = webHostEnvironment;
+            _productRepository = productRepository;
         }
 
         public IActionResult Index()
         {
-            IEnumerable<Product> dbListOfProducts = _db.Products.Include(p=> p.Category);
+            IEnumerable<Product> dbListOfProducts =_productRepository.GetAll(includeProperties:WebConstants.CategoryName);
 
             //foreach (var product in dbListOfProducts)
             //{
@@ -59,12 +60,7 @@ namespace RoadStones_Market.Controllers
             ProductVM productVM = new ProductVM()
             {
                 Product = new Product(),
-                CategorySelectList = _db.Categories
-                    .Select(x => new SelectListItem
-                    {
-                        Text = x.Name,
-                        Value = x.Id.ToString()
-                    })
+                CategorySelectList = _productRepository.GetAllDropdownItems(WebConstants.CategoryName)
             };
 
             if (id==null)
@@ -74,7 +70,7 @@ namespace RoadStones_Market.Controllers
             }
             else
             {
-                productVM.Product = _db.Products.Find(id.GetValueOrDefault());
+                productVM.Product = _productRepository.Find(id.GetValueOrDefault());
 
                 if (productVM.Product== null)
                 {
@@ -94,12 +90,7 @@ namespace RoadStones_Market.Controllers
             //Server Validation- Check
             if (!ModelState.IsValid)
             {
-                productVm.CategorySelectList = _db.Categories
-                    .Select(x => new SelectListItem
-                    {
-                        Text = x.Name,
-                        Value = x.Id.ToString()
-                    });
+                productVm.CategorySelectList = _productRepository.GetAllDropdownItems(WebConstants.CategoryName);
                 return View(productVm);
             }
 
@@ -123,13 +114,13 @@ namespace RoadStones_Market.Controllers
 
                 productVm.Product.Image = fileName + extentionOfTheFile;
 
-                _db.Products.Add(productVm.Product);
+               _productRepository.Add(productVm.Product);
                 
             }
             else
             {
                 //Updating
-                var productFromDb = _db.Products.AsNoTracking().FirstOrDefault(p => p.Id == productVm.Product.Id);
+                var productFromDb = _productRepository.FirstOrDefault(p => p.Id == productVm.Product.Id,isTracking:false);
 
                 if (productFromDb == null)
                 {
@@ -165,10 +156,10 @@ namespace RoadStones_Market.Controllers
                     productVm.Product.Image =productFromDb.Image;
                 }
 
-                _db.Products.Update(productVm.Product);
+                _productRepository.Update(productVm.Product);
             }
 
-            _db.SaveChanges();
+            _productRepository.Save();
             return RedirectToAction("Index");
         }
 
@@ -181,7 +172,8 @@ namespace RoadStones_Market.Controllers
             {
                 return NotFound();
             }
-            var product = _db.Products.Include(x=>x.Category).FirstOrDefault(x=>x.Id==id);
+
+            var product = _productRepository.FirstOrDefault(x=>x.Id==id,includeProperties: "Category");
             
             if (product == null)
             {
@@ -195,7 +187,7 @@ namespace RoadStones_Market.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult DeletePost(int? id)
         {
-            var model = _db.Products.Find(id);
+            var model = _productRepository.Find(id.GetValueOrDefault());
 
             //Server Validation- Check
             if (model== null)
@@ -212,8 +204,8 @@ namespace RoadStones_Market.Controllers
                 System.IO.File.Delete(oldFile);
             }
 
-            _db.Products.Remove(model);
-            _db.SaveChanges();
+            _productRepository.Remove(model);
+            _productRepository.Save();
 
             return RedirectToAction("Index");
         }

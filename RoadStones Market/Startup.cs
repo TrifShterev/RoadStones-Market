@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using RoadStones_Data.Data;
+using RoadStones_Data.Data.Repository;
+using RoadStones_Data.Data.Repository.IRepository;
 
 using RoadStones_Utility;
 
@@ -51,6 +53,9 @@ namespace RoadStones_Market
                 options.Cookie.HttpOnly = true;
                 options.Cookie.IsEssential = true;
             });
+            services.AddScoped<ICategoryRepository, CategoryRepository>();
+            services.AddScoped<IProductRepository, ProductRepository>();
+
             services.AddControllersWithViews();
         }
 

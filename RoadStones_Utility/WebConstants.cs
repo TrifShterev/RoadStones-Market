@@ -11,6 +11,7 @@
         public const string CustomerRole = "Customer";
 
         public const string EmailAdmin = "middnight_man@protonmail.com";
+        public const string CategoryName = "Category";
 
     }
 }
