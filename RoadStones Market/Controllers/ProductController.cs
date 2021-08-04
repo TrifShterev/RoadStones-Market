@@ -115,7 +115,9 @@ namespace RoadStones_Market.Controllers
                 productVm.Product.Image = fileName + extentionOfTheFile;
 
                _productRepository.Add(productVm.Product);
-                
+
+               TempData[WebConstants.Success] = "Product Created Successfully!";
+
             }
             else
             {
@@ -156,6 +158,7 @@ namespace RoadStones_Market.Controllers
                     productVm.Product.Image =productFromDb.Image;
                 }
 
+                TempData[WebConstants.Success] = "Product updated Successfully!";
                 _productRepository.Update(productVm.Product);
             }
 
@@ -203,6 +206,8 @@ namespace RoadStones_Market.Controllers
             {
                 System.IO.File.Delete(oldFile);
             }
+
+            TempData[WebConstants.Success] = "Product Removed Successfully!";
 
             _productRepository.Remove(model);
             _productRepository.Save();

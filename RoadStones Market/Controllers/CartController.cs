@@ -164,6 +164,8 @@ namespace RoadStones_Market.Controllers
 
             _inquiryDetails.Save();
 
+            TempData[WebConstants.Success] = "Inquiry added Successfully!";
+
 
 
             return RedirectToAction(nameof(InquiryConfirmation));
@@ -189,6 +191,8 @@ namespace RoadStones_Market.Controllers
             shoppingCartList.Remove(shoppingCartList.FirstOrDefault(p => p.ProductId == id));
 
            HttpContext.Session.Set(WebConstants.SessionCart,shoppingCartList);
+
+           TempData[WebConstants.Success] = "Item Removed Successfully!";
 
 
             return RedirectToAction(nameof(Index));

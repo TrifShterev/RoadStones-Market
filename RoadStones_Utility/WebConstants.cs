@@ -14,5 +14,7 @@
         public const string EmailAdmin = "middnight_man@protonmail.com";
         public const string CategoryName = "Category";
 
+        public const string Success = "Success";
+        public const string Error = "Error";
     }
 }

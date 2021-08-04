@@ -39,11 +39,14 @@ namespace RoadStones_Market.Controllers
             //Server Validation- Check
             if (!ModelState.IsValid)
             {
+                TempData[WebConstants.Error] = "Error while creating category!";
                 return View(model);
             }
 
             _categoryService.Add(model);
             _categoryService.Save();
+
+            TempData[WebConstants.Success] = "Category Created Successfully!";
 
             return RedirectToAction("Index");
         }
@@ -72,11 +75,14 @@ namespace RoadStones_Market.Controllers
             //Server Validation- Check
             if (!ModelState.IsValid)
             {
+                TempData[WebConstants.Error] = "Error while editing category!";
                 return View(model);
             }
 
             _categoryService.Update(model);
             _categoryService.Save();
+
+            TempData[WebConstants.Success] = "Category Edited Successfully!";
 
             return RedirectToAction("Index");
         }
@@ -112,6 +118,7 @@ namespace RoadStones_Market.Controllers
             _categoryService.Remove(model);
             _categoryService.Save();
 
+            TempData[WebConstants.Success] = "Category Deleted Successfully!";
             return RedirectToAction("Index");
         }
     }
