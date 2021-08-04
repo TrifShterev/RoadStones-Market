@@ -19,5 +19,9 @@ namespace RoadStones_Data.Data
 
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
 
+        public DbSet<InquiryHeader> InquiryHeader { get; set; }
+
+        public DbSet<InquiryDetails> InquiryDetails { get; set; }
+
     }
 }
