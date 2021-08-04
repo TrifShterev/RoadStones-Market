@@ -9,19 +9,19 @@ using RoadStones_Utility;
 
 namespace RoadStones_Data.Data.Repository
 {
-    public class InquiryHeaderRepository : Repository<InquiryHeader>, IInquiryHeaderRepository
+    public class InquiryDetailsRepository : Repository<InquiryDetails>, IInquiryDetailsRepository
     {
         private readonly ApplicationDbContext _db;
         
-        public InquiryHeaderRepository( ApplicationDbContext db) : base( db)
+        public InquiryDetailsRepository( ApplicationDbContext db) : base( db)
         {
             _db = db;
         }
 
-        public void Update(InquiryHeader obj)
+        public void Update(InquiryDetails obj)
         {
             //if we want to update all the props of the product 
-            _db.InquiryHeader.Update(obj);
+            _db.InquiryDetails.Update(obj);
         }
 
         

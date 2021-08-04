@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using RoadStones_Data.Data;
-
+using RoadStones_Data.Data.Repository.IRepository;
 using RoadStones_Models;
 using RoadStones_Models.ViewModels;
 using RoadStones_Utility;
@@ -22,15 +22,22 @@ namespace RoadStones_Market.Controllers
         [BindProperty] 
         public ProductUserVM ProductUserVm { get; set; }
 
-        private readonly ApplicationDbContext _db;
+        
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly IEmailSender _emailSender;
+        private readonly IApplicationUserRepository _applicationUser;
+        private readonly IProductRepository _productRepository;
+        private readonly IInquiryHeaderRepository _inquiryHeader;
+        private readonly IInquiryDetailsRepository _inquiryDetails;
 
-        public CartController(ApplicationDbContext db, IWebHostEnvironment webHostEnvironment, IEmailSender emailSender)
+        public CartController( IWebHostEnvironment webHostEnvironment, IEmailSender emailSender, IApplicationUserRepository applicationUser, IProductRepository productRepository, IInquiryHeaderRepository inquiryHeader, IInquiryDetailsRepository inquiryDetails)
         {
-            _db = db;
             _webHostEnvironment = webHostEnvironment;
             _emailSender = emailSender;
+            _applicationUser = applicationUser;
+            _inquiryHeader = inquiryHeader;
+            _inquiryDetails = inquiryDetails;
+            _productRepository = productRepository;
         }
 
         public IActionResult Index()
@@ -46,7 +53,7 @@ namespace RoadStones_Market.Controllers
 
             List<int> productsIdsInCart = shoppingCartList.Select(x => x.ProductId).ToList();
 
-            IEnumerable<Product> productsList = _db.Products.Where(p => productsIdsInCart.Contains(p.Id));
+            IEnumerable<Product> productsList = _productRepository.GetAll(p => productsIdsInCart.Contains(p.Id));
             
             return View(productsList);
         }
@@ -78,11 +85,11 @@ namespace RoadStones_Market.Controllers
 
             List<int> productsIdsInCart = shoppingCartList.Select(x => x.ProductId).ToList();
 
-            IEnumerable<Product> productsList = _db.Products.Where(p => productsIdsInCart.Contains(p.Id));
+            IEnumerable<Product> productsList = _productRepository.GetAll(p => productsIdsInCart.Contains(p.Id));
 
             ProductUserVm = new ProductUserVM()
             {
-                ApplicationUser = _db.ApplicationUsers.FirstOrDefault(u => u.Id == claim.Value),
+                ApplicationUser = _applicationUser.FirstOrDefault(u => u.Id == claim.Value),
                 ProductsList = productsList.ToList()
             };
             return View(ProductUserVm);

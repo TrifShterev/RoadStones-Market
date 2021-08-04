@@ -4,9 +4,9 @@ using RoadStones_Models;
 
 namespace RoadStones_Data.Data.Repository.IRepository
 {
-    public interface IInquiryHeaderRepository : IRepository<InquiryHeader>
+    public interface IInquiryDetailsRepository : IRepository<InquiryDetails>
     {
-        void Update(InquiryHeader obj);
+        void Update(InquiryDetails obj);
 
         
     }

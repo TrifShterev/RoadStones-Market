@@ -6,7 +6,7 @@ using System.Diagnostics;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using RoadStones_Data.Data;
-
+using RoadStones_Data.Data.Repository.IRepository;
 using RoadStones_Models.ViewModels;
 using RoadStones_Utility;
 
@@ -15,20 +15,23 @@ namespace RoadStones_Market.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly ApplicationDbContext _db;
+        private readonly IProductRepository _productRepository;
+        private readonly ICategoryRepository _categoryRepository;
 
-        public HomeController(ILogger<HomeController> logger, ApplicationDbContext db)
+
+        public HomeController(ILogger<HomeController> logger, IProductRepository productRepository, ICategoryRepository categoryRepository)
         {
             _logger = logger;
-            _db = db;
+            _productRepository = productRepository;
+            _categoryRepository = categoryRepository;
         }
 
         public IActionResult Index()
         {
             HomeVM homeViewModel = new HomeVM()
             {
-                Products = _db.Products.Include(u => u.Category),
-                Categories = _db.Categories
+                Products = _productRepository.GetAll(includeProperties:WebConstants.CategoryName),
+                Categories = _categoryRepository.GetAll()
             };
 
             return View(homeViewModel);
@@ -47,9 +50,7 @@ namespace RoadStones_Market.Controllers
 
             var detailsVm = new DetailsVM()
             {
-                Product = _db.Products
-                    .Include(u => u.Category)
-                    .FirstOrDefault(d => d.Id == id),
+                Product = _productRepository.FirstOrDefault(d => d.Id == id, includeProperties: WebConstants.CategoryName),
                 ExistInCart = false
 
             };
