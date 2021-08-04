@@ -91,6 +91,11 @@ namespace RoadStones_Data.Data.Repository
             DbSet.Remove(entity);
         }
 
+        public void RemoveRange(IEnumerable<T> entity)
+        {
+            DbSet.RemoveRange(entity);
+        }
+
         public void Save()
         {
             _db.SaveChanges();

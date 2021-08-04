@@ -5,6 +5,7 @@
         public const string ImagePath = @"\images\products\";
 
         public const string SessionCart = "ShoppingCartSession";
+        public const string SessionInquiryId = "InquirySession";
 
 
         public const string AdminRole = "Admin";
