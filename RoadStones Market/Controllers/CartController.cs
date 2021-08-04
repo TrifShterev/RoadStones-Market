@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -100,14 +101,17 @@ namespace RoadStones_Market.Controllers
         [ActionName("Summary")]
         public async Task<IActionResult> SummaryPost(ProductUserVM productUserVm )
         {
-            var PathToTemplate = _webHostEnvironment.WebRootPath + Path.DirectorySeparatorChar.ToString()
+            var claimsIdentity = (ClaimsIdentity) User.Identity;
+            var claim = claimsIdentity?.FindFirst(ClaimTypes.NameIdentifier);
+
+            var pathToTemplate = _webHostEnvironment.WebRootPath + Path.DirectorySeparatorChar.ToString()
                                                                  + "templates" + Path.DirectorySeparatorChar.ToString()
                                                                  + "inquiry.html";
 
             var subject = "New Inquiry";
             string HtmlBody = "";
 
-            using (StreamReader sr = System.IO.File.OpenText(PathToTemplate))
+            using (StreamReader sr = System.IO.File.OpenText(pathToTemplate))
             {
                 HtmlBody = sr.ReadToEnd();
             }
@@ -131,6 +135,36 @@ namespace RoadStones_Market.Controllers
                 productListStringBuilder.ToString());
 
             await _emailSender.SendEmailAsync(WebConstants.EmailAdmin, subject, messageBody);
+
+
+            //this must be pushed to DB together wit InquiryDetails
+            InquiryHeader inquiryHeader = new InquiryHeader()
+            {
+                ApplicationUserId = claim.Value,
+                FullName = ProductUserVm.ApplicationUser.FullName,
+                Email = ProductUserVm.ApplicationUser.Email,
+                PhoneNumber = ProductUserVm.ApplicationUser.PhoneNumber,
+                InquiryDate = DateTime.Now
+
+            };
+
+            _inquiryHeader.Add(inquiryHeader);
+            _inquiryHeader.Save();
+
+            foreach (var product in productUserVm.ProductsList)
+            {
+                InquiryDetails inquiryDetail = new InquiryDetails()
+                {
+                    InquiryHeaderId = inquiryHeader.Id,
+                    ProductId = product.Id
+                };
+
+                _inquiryDetails.Add(inquiryDetail);
+            }
+
+            _inquiryDetails.Save();
+
+
 
             return RedirectToAction(nameof(InquiryConfirmation));
         }
