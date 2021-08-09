@@ -9,7 +9,7 @@ using RoadStones_Utility;
 
 namespace RoadStones_Market.Controllers
 {
-    [Authorize(WebConstants.AdminRole)]
+    [Authorize(Roles = WebConstants.AdminRole)]
     public class InquiryController : Controller
     {
         [BindProperty]

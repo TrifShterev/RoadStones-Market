@@ -1,4 +1,5 @@
-﻿@model RoadStones_Models.ViewModels.ProductUserVM
+﻿@using RoadStones_Utility
+@model RoadStones_Models.ViewModels.ProductUserVM
 
 
 <form method="post">
@@ -26,7 +27,7 @@
                                 </div>
                                 <div class="row my-1">
                                     <div class="col-3">
-                                        <label>Name</label>
+                                        <label>Name*</label>
                                     </div>
                                     <div class="col-9">
                                         <input asp-for="ApplicationUser.FullName" type="text" class="form-control" />
@@ -36,22 +37,61 @@
                                 </div>
                                 <div class="row my-1">
                                     <div class="col-3">
-                                        <label>Phone</label>
+                                        <label>Phone*</label>
                                     </div>
                                     <div class="col-9">
-                                        <input asp-for="ApplicationUser.PhoneNumber" type="text" class="form-control" />
+                                        <input asp-for="ApplicationUser.PhoneNumber" required="" type="text" class="form-control" />
                                         <span asp-validation-for="ApplicationUser.PhoneNumber" class="text-danger"></span>
                                     </div>
                                 </div>
                                 <div class="row my-1">
                                     <div class="col-3">
-                                        <label>Email</label>
+                                        <label>Email*</label>
                                     </div>
                                     <div class="col-9">
-                                        <input asp-for="ApplicationUser.Email" type="text" class="form-control" />
+                                        <input asp-for="ApplicationUser.Email" required="" type="text" class="form-control" />
                                         <span asp-validation-for="ApplicationUser.Email" class="text-danger"></span>
                                     </div>
                                 </div>
+                                @if (User.IsInRole(WebConstants.AdminRole))
+                                {
+                                    <div class="row my-1">
+                                        <div class="col-3">
+                                            <label>Street address</label>
+                                        </div>
+                                        <div class="col-9">
+                                            <input asp-for="ApplicationUser.StreetAddress" type="text" class="form-control" />
+                                            <span asp-validation-for="ApplicationUser.StreetAddress" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                    <div class="row my-1">
+                                        <div class="col-3">
+                                            <label>City</label>
+                                        </div>
+                                        <div class="col-9">
+                                            <input asp-for="ApplicationUser.City" type="text" class="form-control" />
+                                            <span asp-validation-for="ApplicationUser.City" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                    <div class="row my-1">
+                                        <div class="col-3">
+                                            <label>Post Code</label>
+                                        </div>
+                                        <div class="col-9">
+                                            <input asp-for="ApplicationUser.PostalCode" type="text" class="form-control" />
+                                            <span asp-validation-for="ApplicationUser.PostalCode" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                    <div class="row my-1">
+                                        <div class="col-3">
+                                            <label>Country</label>
+                                        </div>
+                                        <div class="col-9">
+                                            <input asp-for="ApplicationUser.Country" type="text" class="form-control" />
+                                            <span asp-validation-for="ApplicationUser.Country" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                }
                             </div>
                             <div class="col-12 col-lg-5 row">
                                 <div class="col-12">
@@ -59,18 +99,43 @@
                                         <span class="text-info">Summary:</span>
                                     </h4>
                                     <ul class="list-group mb-3">
-                                        @for (int i = 0; i < Model.ProductsList.Count();i++)
+
+                                        @{
+                                            var orderTotal = 0.0;
+                                        }
+
+                                        @for (int i = 0; i < Model.ProductsList.Count(); i++)
                                         {
-                                            <input type="hidden" asp-for="@Model.ProductsList[i].Id"/>
-                                            <input type="hidden" asp-for="@Model.ProductsList[i].Name"/>
+                                            <input type="hidden" asp-for="@Model.ProductsList[i].Id" />
+                                            <input type="hidden" asp-for="@Model.ProductsList[i].Name" />
                                             <li class="list-group-item d-flex justify-content-between">
                                                 <div>
                                                     <h6 class="my-0">@Model.ProductsList[i].Name</h6>
-                                                    <small class="text-muted">Price per m²: @Model.ProductsList[i].Price€</small>
+                                                    @if (User.IsInRole(WebConstants.AdminRole))
+                                                    {
+                                                        <small class="text-muted">Square meters (m²) : @Model.ProductsList[i].TempSqMeters</small>
+                                                    }
+                                                    else
+                                                    {
+                                                        <small class="text-muted">Price per m²: @Model.ProductsList[i].Price€</small>
+                                                    }
+
                                                 </div>
+                                                @if (User.IsInRole(WebConstants.AdminRole))
+                                                {
+                                                    <span class="text- text-muted">@(Model.ProductsList[i].Price * Model.ProductsList[i].TempSqMeters)€</span>
+                                                }
+                                            </li>
+                                            orderTotal += Model.ProductsList[i].Price * Model.ProductsList[i].TempSqMeters;
+                                        }
+                                        @if (User.IsInRole(WebConstants.AdminRole))
+                                        {
+                                            <li class="list-group-item d-flex justify-content-between bg-light">
+                                                <small class="text-info">Total (EURO)</small>
+                                                <strong class="text-info">@orderTotal€</strong>
                                             </li>
                                         }
-                                       
+                                        <small class="text-muted">* - required fields</small>
                                     </ul>
                                 </div>
                             </div>
@@ -80,7 +145,15 @@
                 <div class="card-footer">
                     <div class="row">
                         <div class="col-12 col-md-5 offset-md-7">
+                            @if (User.IsInRole(WebConstants.AdminRole))
+                            {
+                                <button class="btn btn-success form-control" id="submit-button">Submit Order</button>
+                            }
+                            else
+                            {
                             <button type="submit" class="btn btn-primary form-control">Submit Inquiry</button>
+                            }
+                            
                         </div>
                     </div>
                 </div>

@@ -70,16 +70,56 @@ namespace RoadStones_Market.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [ActionName("Index")]
-        public IActionResult IndexPost()
+        public IActionResult IndexPost(IEnumerable<Product> prodList)
         {
+            List<ShoppingCart> shoppingCartList = new List<ShoppingCart>();
+            
+            foreach (var product in prodList)
+            {
+                shoppingCartList.Add(new ShoppingCart
+                {
+                    ProductId = product.Id,
+                    SqMeters = product.TempSqMeters
+                });
+            }
+            HttpContext.Session.Set(WebConstants.SessionCart, shoppingCartList);
             return RedirectToAction(nameof(Summary));
         }
 
         public IActionResult Summary()
         {
-            var claimsIdentity = (ClaimsIdentity) User.Identity;
+            ApplicationUser appUser;
 
-            var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+            if (User.IsInRole(WebConstants.AdminRole))
+            {
+                if (HttpContext.Session.Get<int>(WebConstants.SessionInquiryId) != 0)
+                {
+                    //cart has been loaded using an inquiry
+                    InquiryHeader inquiryHeader = _inquiryHeader.FirstOrDefault(u =>
+                        u.Id == HttpContext.Session.Get<int>(WebConstants.SessionInquiryId));
+
+                    appUser = new ApplicationUser()
+                    {
+                        Email = inquiryHeader.Email,
+                        FullName = inquiryHeader.FullName,
+                        PhoneNumber = inquiryHeader.PhoneNumber
+                    };
+                }
+                else
+                {
+                    appUser = new ApplicationUser();
+                }
+            }
+            else
+            {
+                var claimsIdentity = (ClaimsIdentity)User.Identity;
+
+                var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+
+                appUser = _applicationUser.FirstOrDefault(u => u.Id == claim.Value);
+            }
+
+           
 
             // var userId = User.FindFirstValue(ClaimTypes.Name); --> Another way to retrive UserId
 
@@ -98,9 +138,17 @@ namespace RoadStones_Market.Controllers
 
             ProductUserVm = new ProductUserVM()
             {
-                ApplicationUser = _applicationUser.FirstOrDefault(u => u.Id == claim.Value),
-                ProductsList = productsList.ToList()
+                ApplicationUser = appUser,
+               
             };
+
+            foreach (var cartObj in shoppingCartList)
+            {
+                Product prodTemp = _productRepository.FirstOrDefault(u => u.Id == cartObj.ProductId);
+                prodTemp.TempSqMeters = cartObj.SqMeters;
+                ProductUserVm.ProductsList.Add(prodTemp);
+            }
+
             return View(ProductUserVm);
         }
 
@@ -145,7 +193,7 @@ namespace RoadStones_Market.Controllers
             await _emailSender.SendEmailAsync(WebConstants.EmailAdmin, subject, messageBody);
 
 
-            //this must be pushed to DB together wit InquiryDetails
+            //this must be pushed to DB together with InquiryDetails
             InquiryHeader inquiryHeader = new InquiryHeader()
             {
                 ApplicationUserId = claim.Value,
