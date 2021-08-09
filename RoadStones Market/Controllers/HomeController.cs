@@ -69,7 +69,7 @@ namespace RoadStones_Market.Controllers
 
         [HttpPost,ActionName("Details")]
 
-        public IActionResult DetailsPost(int id)
+        public IActionResult DetailsPost(int id,DetailsVM detailsVm)
         {
             List<ShoppingCart> shoppingCartList = new List<ShoppingCart>();
 
@@ -80,9 +80,12 @@ namespace RoadStones_Market.Controllers
             }
             shoppingCartList.Add(new ShoppingCart
             {
-                ProductId = id
+                ProductId = id,
+                SqMeters = detailsVm.Product.TempSqMeters
             });
             HttpContext.Session.Set(WebConstants.SessionCart, shoppingCartList);
+
+            TempData[WebConstants.Success] = "Item add to cart successfully!";
 
             return RedirectToAction(nameof(Index));
         }

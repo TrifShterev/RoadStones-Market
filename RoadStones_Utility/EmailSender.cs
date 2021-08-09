@@ -13,12 +13,14 @@ namespace RoadStones_Utility
     {
         private readonly IConfiguration _configuration;
 
+        public MailJetSettings _mailJetSettings { get; set; }
+
         public EmailSender(IConfiguration configuration)
         {
             _configuration = configuration;
         }
 
-        public MailJetSettings MailJetSettings { get; set; }
+       
 
 
         public Task SendEmailAsync(string email, string subject, string htmlMessage)
@@ -28,14 +30,13 @@ namespace RoadStones_Utility
 
         public async Task Execute(string email, string subject, string body)
         {
-            MailJetSettings = _configuration.GetSection("MailJet").Get<MailJetSettings>();
+            _mailJetSettings = _configuration.GetSection("MailJet").Get<MailJetSettings>();
 
-            MailjetClient client = new MailjetClient(MailJetSettings.ApiKey, MailJetSettings.SecretKey)
+            MailjetClient client = new MailjetClient(_mailJetSettings.ApiKey, _mailJetSettings.SecretKey)
             { 
-                //TODO I need to make sending of email work
+               //TODO Still something wrong and does not work properly --> need to be fixed
+                //Version = ApiVersion.V3_1,
 
-               // Version = ApiVersion.V3_1,
-               
             };
             MailjetRequest request = new MailjetRequest
                 {

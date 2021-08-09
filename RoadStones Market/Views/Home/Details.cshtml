@@ -30,7 +30,25 @@
 
                                         <p class="text-secondary">@Html.Raw(Model.Product.Description)</p>
                                     </div>
+                                    @if (User.IsInRole(WebConstants.AdminRole))
+                                    {
 
+
+                                        <div class="col-12">
+                                            Square meters(m²):
+                                        </div>
+                                        <div class="col-12">
+                                            @if (Model.ExistInCart)
+                                            {
+                                                <input asp-for="Product.TempSqMeters" disabled="disabled" class="form-control"/>
+                                            }
+                                            else
+                                            {
+                                                <input asp-for="Product.TempSqMeters"  class="form-control"/>
+                                            }
+                                            <span asp-validation-for="Product.TempSqMeters" class="text-danger"></span>
+                                        </div>
+                                    }
                                 </div>
                             </div>
                         </div>

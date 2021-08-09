@@ -5,6 +5,11 @@ namespace RoadStones_Models
 {
     public class Product
     {
+        public Product()
+        {
+            TempSqMeters = 1;
+        }
+
         [Key]
         public int Id { get; set; }
 
@@ -25,5 +30,9 @@ namespace RoadStones_Models
 
         [ForeignKey("CategoryId")]
         public virtual Category Category { get; set; }
+
+        [NotMapped]
+        [Range(1,1000)]
+        public double TempSqMeters { get; set; }
     }
 }

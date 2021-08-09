@@ -12,7 +12,7 @@
                         Order Summary
                     </div>
                     <div class="col-6 text-right">
-                        <a class="btn btn-outline-info btn-sm">Back to Cart</a>
+                        <a class="btn btn-outline-info btn-sm" asp-action="Index">Back to Cart</a>
                     </div>
                 </div>
                 <div class="card-body">
@@ -66,7 +66,7 @@
                                             <li class="list-group-item d-flex justify-content-between">
                                                 <div>
                                                     <h6 class="my-0">@Model.ProductsList[i].Name</h6>
-                                                    <small class="text-muted">Price per m²: $@Model.ProductsList[i].Price</small>
+                                                    <small class="text-muted">Price per m²: @Model.ProductsList[i].Price€</small>
                                                 </div>
                                             </li>
                                         }

@@ -54,7 +54,15 @@ namespace RoadStones_Market.Controllers
 
             List<int> productsIdsInCart = shoppingCartList.Select(x => x.ProductId).ToList();
 
-            IEnumerable<Product> productsList = _productRepository.GetAll(p => productsIdsInCart.Contains(p.Id));
+            IEnumerable<Product> productsListTemp = _productRepository.GetAll(p => productsIdsInCart.Contains(p.Id));
+            IList<Product> productsList= new List<Product>();
+
+            foreach (var shoppingCart in shoppingCartList)
+            {
+                Product productTemp = productsListTemp.FirstOrDefault(u => u.Id == shoppingCart.ProductId);
+                productTemp.TempSqMeters = shoppingCart.SqMeters;
+                productsList.Add(productTemp);
+            }
             
             return View(productsList);
         }
