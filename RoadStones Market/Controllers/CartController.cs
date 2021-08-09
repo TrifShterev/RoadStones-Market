@@ -205,5 +205,24 @@ namespace RoadStones_Market.Controllers
 
             return RedirectToAction(nameof(Index));
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult UpdateCart(IEnumerable<Product> prodList)
+        {
+            List<ShoppingCart> shoppingCartList = new List<ShoppingCart>();
+
+            foreach (var product in prodList)
+            {
+                shoppingCartList.Add(new ShoppingCart
+                {
+                    ProductId = product.Id,
+                    SqMeters = product.TempSqMeters
+                });
+            }
+            HttpContext.Session.Set(WebConstants.SessionCart, shoppingCartList);
+
+            return RedirectToAction(nameof(Index));
+        }
     }
 }
