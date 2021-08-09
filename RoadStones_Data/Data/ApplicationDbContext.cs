@@ -23,5 +23,9 @@ namespace RoadStones_Data.Data
 
         public DbSet<InquiryDetails> InquiryDetails { get; set; }
 
+        public DbSet<OrderHeader> OrderHeaders { get; set; }
+
+        public DbSet<OrderDetail> OrderDetails { get; set; }
+
     }
 }
