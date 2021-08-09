@@ -9,6 +9,7 @@ namespace RoadStones_Models
         [Required]
         public string FullName { get; set; }
 
+        //TODO The validations of those props
         [NotMapped]
         public string StreetAddress { get; set; }
 

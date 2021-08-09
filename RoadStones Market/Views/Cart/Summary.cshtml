@@ -60,7 +60,7 @@
                                             <label>Street address</label>
                                         </div>
                                         <div class="col-9">
-                                            <input asp-for="ApplicationUser.StreetAddress" type="text" class="form-control" />
+                                            <input asp-for="ApplicationUser.StreetAddress" required="" type="text" class="form-control" />
                                             <span asp-validation-for="ApplicationUser.StreetAddress" class="text-danger"></span>
                                         </div>
                                     </div>
@@ -69,7 +69,7 @@
                                             <label>City</label>
                                         </div>
                                         <div class="col-9">
-                                            <input asp-for="ApplicationUser.City" type="text" class="form-control" />
+                                            <input asp-for="ApplicationUser.City" required="" type="text" class="form-control" />
                                             <span asp-validation-for="ApplicationUser.City" class="text-danger"></span>
                                         </div>
                                     </div>
@@ -78,7 +78,7 @@
                                             <label>Post Code</label>
                                         </div>
                                         <div class="col-9">
-                                            <input asp-for="ApplicationUser.PostalCode" type="text" class="form-control" />
+                                            <input asp-for="ApplicationUser.PostalCode" required="" type="text" class="form-control" />
                                             <span asp-validation-for="ApplicationUser.PostalCode" class="text-danger"></span>
                                         </div>
                                     </div>
@@ -87,7 +87,7 @@
                                             <label>Country</label>
                                         </div>
                                         <div class="col-9">
-                                            <input asp-for="ApplicationUser.Country" type="text" class="form-control" />
+                                            <input asp-for="ApplicationUser.Country" required="" type="text" class="form-control" />
                                             <span asp-validation-for="ApplicationUser.Country" class="text-danger"></span>
                                         </div>
                                     </div>
@@ -108,6 +108,8 @@
                                         {
                                             <input type="hidden" asp-for="@Model.ProductsList[i].Id" />
                                             <input type="hidden" asp-for="@Model.ProductsList[i].Name" />
+                                            <input type="hidden" asp-for="@Model.ProductsList[i].Price" />
+                                            <input type="hidden" asp-for="@Model.ProductsList[i].TempSqMeters" />
                                             <li class="list-group-item d-flex justify-content-between">
                                                 <div>
                                                     <h6 class="my-0">@Model.ProductsList[i].Name</h6>

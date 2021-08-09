@@ -59,6 +59,9 @@ namespace RoadStones_Market
             services.AddScoped<IInquiryHeaderRepository, InquiryHeaderRepository>();
             services.AddScoped<IApplicationUserRepository, ApplicationUserRepository>();
 
+            services.AddScoped<IOrderDetailRepository, OrderDetailsRepository>();
+            services.AddScoped<IOrderHeaderRepository, OrderHeaderRepository>();
+
             services.AddControllersWithViews();
         }
 
