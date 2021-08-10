@@ -367,6 +367,12 @@ namespace RoadStones_Market.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-      
+        public IActionResult Clear()
+        {
+            HttpContext.Session.Clear();
+
+
+            return RedirectToAction("Index", "Home");
+        }
     }
 }
