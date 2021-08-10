@@ -12,6 +12,7 @@ using RoadStones_Data.Data.Repository;
 using RoadStones_Data.Data.Repository.IRepository;
 
 using RoadStones_Utility;
+using RoadStones_Utility.BrainTree;
 
 namespace RoadStones_Market
 {
@@ -30,6 +31,7 @@ namespace RoadStones_Market
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
+            services.AddMemoryCache();
             services.AddIdentity<IdentityUser,IdentityRole>()
                 .AddDefaultTokenProviders()
                 .AddDefaultUI()
@@ -46,6 +48,7 @@ namespace RoadStones_Market
             });
             services.AddTransient<IEmailSender, EmailSender>();
 
+            
             services.AddHttpContextAccessor();
             services.AddSession(options =>
             {
@@ -53,6 +56,11 @@ namespace RoadStones_Market
                 options.Cookie.HttpOnly = true;
                 options.Cookie.IsEssential = true;
             });
+
+           services.Configure<BrainTreeSettings>(Configuration.GetSection("BrainTree"));
+
+            services.AddSingleton<IBrainTreeGate, BrainTreeGate>();
+
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<IInquiryDetailsRepository, InquiryDetailsRepository>();

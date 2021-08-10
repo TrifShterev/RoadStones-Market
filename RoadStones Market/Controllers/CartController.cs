@@ -6,14 +6,17 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using Braintree;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using RoadStones_Data.Data;
 using RoadStones_Data.Data.Repository.IRepository;
 using RoadStones_Models;
 using RoadStones_Models.ViewModels;
 using RoadStones_Utility;
+using RoadStones_Utility.BrainTree;
 
 namespace RoadStones_Market.Controllers
 {
@@ -32,8 +35,10 @@ namespace RoadStones_Market.Controllers
         private readonly IInquiryDetailsRepository _inquiryDetails;
         private readonly IOrderHeaderRepository _orderHeaderRepository;
         private readonly IOrderDetailRepository _orderDetailRepository;
+        private readonly IBrainTreeGate _brain;
+        
 
-        public CartController( IWebHostEnvironment webHostEnvironment, IEmailSender emailSender, IApplicationUserRepository applicationUser, IProductRepository productRepository, IInquiryHeaderRepository inquiryHeader, IInquiryDetailsRepository inquiryDetails, IOrderDetailRepository orderDetailRepository, IOrderHeaderRepository orderHeaderRepository)
+        public CartController( IWebHostEnvironment webHostEnvironment, IEmailSender emailSender, IApplicationUserRepository applicationUser, IProductRepository productRepository, IInquiryHeaderRepository inquiryHeader, IInquiryDetailsRepository inquiryDetails, IOrderDetailRepository orderDetailRepository, IOrderHeaderRepository orderHeaderRepository, IBrainTreeGate brain)
         {
             _webHostEnvironment = webHostEnvironment;
             _emailSender = emailSender;
@@ -42,6 +47,7 @@ namespace RoadStones_Market.Controllers
             _inquiryDetails = inquiryDetails;
             _orderDetailRepository = orderDetailRepository;
             _orderHeaderRepository = orderHeaderRepository;
+            _brain = brain;
             _productRepository = productRepository;
         }
 
@@ -113,6 +119,12 @@ namespace RoadStones_Market.Controllers
                 {
                     appUser = new ApplicationUser();
                 }
+
+                var gateway = _brain.GetGateway();
+                var clientToken = gateway.ClientToken.Generate();
+
+                ViewBag.ClientToken = clientToken;
+
             }
             else
             {
@@ -159,7 +171,7 @@ namespace RoadStones_Market.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [ActionName("Summary")]
-        public async Task<IActionResult> SummaryPost(ProductUserVM productUserVm )
+        public async Task<IActionResult> SummaryPost(IFormCollection collection,ProductUserVM productUserVm )
         {
             var claimsIdentity = (ClaimsIdentity) User.Identity;
             var claim = claimsIdentity?.FindFirst(ClaimTypes.NameIdentifier);
@@ -202,6 +214,35 @@ namespace RoadStones_Market.Controllers
                 }
 
                 _orderDetailRepository.Save();
+
+                //BrainTree payment transaction request
+                string nonceFromTheClient = collection["payment_method_nonce"];
+
+                var request = new TransactionRequest
+                {
+                    Amount = Convert.ToDecimal(orderHeader.FinalOrderTotal),
+                    PaymentMethodNonce = nonceFromTheClient,
+                    OrderId = orderHeader.Id.ToString(),
+                    Options = new TransactionOptionsRequest
+                    {
+                        SubmitForSettlement = true
+                    }
+                };
+                var gateway = _brain.GetGateway();
+
+                Result<Transaction> result = gateway.Transaction.Sale(request);
+
+                if (result.Target.ProcessorResponseText == "Approved")
+                {
+                    orderHeader.TransactionId = result.Target.Id;
+                    orderHeader.OrderStatus = WebConstants.StatusApproved;
+                }
+                else
+                {
+                    orderHeader.OrderStatus = WebConstants.StatusCancelled;
+                }
+
+                _orderHeaderRepository.Save();
 
                 return RedirectToAction(nameof(InquiryConfirmation), new {id=orderHeader.Id});
             }
@@ -325,5 +366,7 @@ namespace RoadStones_Market.Controllers
 
             return RedirectToAction(nameof(Index));
         }
+
+      
     }
 }
