@@ -70,6 +70,12 @@ namespace RoadStones_Market
             services.AddScoped<IOrderDetailRepository, OrderDetailsRepository>();
             services.AddScoped<IOrderHeaderRepository, OrderHeaderRepository>();
 
+            services.AddAuthentication().AddFacebook(options =>
+            {
+                options.AppId = "809369006428030";
+                options.AppSecret = "75aedbadd762082df96dbd2d7659c417";
+            });
+
             services.AddControllersWithViews();
         }
 
